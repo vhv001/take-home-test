@@ -11,7 +11,7 @@ import com.application.ledger.service.OperationTypesManager;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /* Manages the different transaction/operation types that our system can support */
@@ -29,7 +29,7 @@ public class OperationTypesHandler {
 
     /* Get opeartion type details by id*/
     @GetMapping("/v1/operationtype/{id}")
-    public ResponseEntity<OperationType> getOperationType(@RequestParam("id") String operationType) {
+    public ResponseEntity<OperationType> getOperationType(@PathVariable("id") String operationType) {
         return operationTypesManager.getOperationType(operationType);
     }
     

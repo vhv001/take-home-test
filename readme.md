@@ -47,7 +47,7 @@ response
     "product_name"              : "cards",
     "document_id"               : "AWGEQ9Q12",
     "account_opening_timestamp" : "2024-08-08T23:00:00",
-    "account_status"            : "ACTIVE"
+    "status"                    : "ACTIVE"
 }
 
 ```
@@ -123,7 +123,7 @@ response
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
 | `operation_type` | `integer` | [**Required**] Unique representation of operation/payment type|
-| `description` | `integer` | [**Required**] Type of operation |
+| `description` | `string` | [**Required**] Type of operation |
 | `debit_or_credit` | `string` | [**Required**] Determines whether it is a debit or credit txn from user's perspective |
 
 
@@ -138,50 +138,50 @@ response
 
 <h4>Accounts table</h4>
 
-```
-+----------------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| Field                | Type        | Null | Key | Default           | Extra                                         |
-+----------------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| id                   | int         | NO   | PRI | NULL              | auto_increment                                |
-| account_id           | varchar(15) | NO   | MUL | NULL              |                                               |
-| document_id          | varchar(20) | NO   |     | NULL              |                                               |
-| product_name         | varchar(15) | NO   |     | NULL              |                                               |
-| account_opening_time | timestamp   | NO   |     | NULL              |                                               |
-| account_status       | varchar(10) | NO   |     | NULL              |                                               |
-| updated_at           | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
-| created_at           | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
-+----------------------+-------------+------+-----+-------------------+-----------------------------------------------+
+```sql
+CREATE TABLE `accounts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `account_id` varchar(15) NOT NULL,
+  `document_id` varchar(20) NOT NULL,
+  `product_name` varchar(15) NOT NULL,
+  `account_opening_time` timestamp NOT NULL,
+  `account_status` varchar(10) NOT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unq_idx` (`account_id`,`product_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
 
 <h4>Operation types table</h4>
 
-```
-+-----------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| Field           | Type        | Null | Key | Default           | Extra                                         |
-+-----------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| operation_id    | int         | NO   | PRI | NULL              |                                               |
-| description     | varchar(40) | NO   |     | NULL              |                                               |
-| debit_or_credit | varchar(10) | NO   |     | NULL              |                                               |
-| created_at      | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
-| updated_at      | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
-+-----------------+-------------+------+-----+-------------------+-----------------------------------------------+
+```sql
+CREATE TABLE `operation_types` (
+  `operation_id` int NOT NULL,
+  `description` varchar(40) NOT NULL,
+  `debit_or_credit` varchar(10) NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`operation_id`),
+  UNIQUE KEY `operation_id` (`operation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
 
 <h4>Transactions table</h4>
 
-```
-+------------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| Field            | Type        | Null | Key | Default           | Extra                                         |
-+------------------+-------------+------+-----+-------------------+-----------------------------------------------+
-| id               | int         | NO   | PRI | NULL              | auto_increment                                |
-| transaction_id   | varchar(40) | NO   | MUL | NULL              |                                               |
-| account_id       | varchar(15) | NO   |     | NULL              |                                               |
-| operation_type   | int         | NO   |     | NULL              |                                               |
-| amount           | varchar(10) | NO   |     | NULL              |                                               |
-| currency         | varchar(5)  | NO   |     | NULL              |                                               |
-| status           | varchar(10) | NO   |     | NULL              |                                               |
-| transaction_time | timestamp   | NO   |     | NULL              |                                               |
-| created_at       | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
-| updated_at       | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
-+------------------+-------------+------+-----+-------------------+-----------------------------------------------+
+```sql
+CREATE TABLE `transactions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `transaction_id` varchar(40) NOT NULL,
+  `account_id` varchar(15) NOT NULL,
+  `operation_type` int NOT NULL,
+  `amount` varchar(10) NOT NULL,
+  `currency` varchar(5) NOT NULL,
+  `status` varchar(10) NOT NULL,
+  `transaction_time` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `transaction_id` (`transaction_id`,`account_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 ```
