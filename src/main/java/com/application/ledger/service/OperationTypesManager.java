@@ -32,7 +32,7 @@ public class OperationTypesManager {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(201).build();
     }
 
     public ResponseEntity<OperationType> getOperationType(String operationType){
